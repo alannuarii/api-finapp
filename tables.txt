@@ -1,0 +1,11 @@
+CREATE TABLE financial
+(
+    id INT NOT NULL AUTO_INCREMENT,
+    tanggal DATE NOT NULL,
+    tarik BOOLEAN,
+    extra BOOLEAN,
+    keluar BOOLEAN,
+    item_keluar VARCHAR(150) NOT NULL,
+    nilai INT NOT NULL,
+    PRIMARY KEY (id)
+)
