@@ -4,13 +4,28 @@ const date = require("./utils");
 const { promisify } = require("util");
 const dbQuery = promisify(db.query).bind(db);
 
-const insert = async (req, res) => {
+const insertData = async (req, res) => {
   try {
     const { tanggal, tarik, extra, keluar, item, nilai } = req.body;
     const sql = `INSERT INTO financial (tanggal, tarik, extra, keluar, item_keluar, nilai) VALUES (?,?,?,?,?,?)`;
     const values = [tanggal, tarik, extra, keluar, item, nilai];
 
     await dbQuery(sql, values);
+
+    res.status(200).json({ message: "Data berhasil dikirim" });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: "Gagal input data", data: [] });
+  }
+};
+
+const deleteData = async (req, res) => {
+  try {
+    const { id } = req.body;
+    const sql = `DELETE FROM financial WHERE id = ?`;
+    const value = [id];
+
+    await dbQuery(sql, value);
 
     res.status(200).json({ message: "Data berhasil dikirim" });
   } catch (error) {
@@ -53,4 +68,4 @@ const getBeforeMonth = async (req, res) => {
   }
 };
 
-module.exports = { insert, getThisMonth, getBeforeMonth };
+module.exports = { insertData, deleteData, getThisMonth, getBeforeMonth };
