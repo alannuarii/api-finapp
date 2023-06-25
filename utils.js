@@ -6,7 +6,7 @@ const getDate = () => {
   let tanggal25BulanIni;
   let tanggal24BulanDepan;
 
-  if (tanggal > 25) {
+  if (tanggal >= 25) {
     tanggal25BulanIni = new Date(tahun, bulan, 26);
     tanggal24BulanDepan = new Date(tahun, bulan + 1, 25);
   } else {

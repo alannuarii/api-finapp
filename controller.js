@@ -6,13 +6,38 @@ const dbQuery = promisify(db.query).bind(db);
 
 const insertData = async (req, res) => {
   try {
-    const { tanggal, tarik, extra, keluar, item, nilai } = req.body;
-    const sql = `INSERT INTO financial (tanggal, tarik, extra, keluar, item_keluar, nilai) VALUES (?,?,?,?,?,?)`;
-    const values = [tanggal, tarik, extra, keluar, item, nilai];
+    let { tanggal, tarik, keluar, item, online, nilai } = req.body;
+    if (keluar === "1") {
+      nilai = -nilai;
+      if (online === "1") {
+        const nilaiTarik = [1, 0];
+        const nilaiKeluar = [0, 1];
+        const nilaiItem = ["Dana Pembelian Online", item];
+        const newNilai = [-nilai, nilai];
+        for (let i = 0; i < 2; i++) {
+          const sql = `INSERT INTO financial (tanggal, tarik,  keluar, item_keluar, nilai) VALUES (?,?,?,?,?)`;
+          const values = [tanggal, nilaiTarik[i], nilaiKeluar[i], nilaiItem[i], newNilai[i]];
 
-    await dbQuery(sql, values);
+          await dbQuery(sql, values);
+        }
 
-    res.status(200).json({ message: "Data berhasil dikirim" });
+        res.status(200).json({ message: "Data berhasil dikirim" });
+      } else {
+        const sql = `INSERT INTO financial (tanggal, tarik,  keluar, item_keluar, nilai) VALUES (?,?,?,?,?)`;
+        const values = [tanggal, tarik, keluar, item, nilai];
+
+        await dbQuery(sql, values);
+
+        res.status(200).json({ message: "Data berhasil dikirim" });
+      }
+    } else {
+      const sql = `INSERT INTO financial (tanggal, tarik,  keluar, item_keluar, nilai) VALUES (?,?,?,?,?)`;
+      const values = [tanggal, tarik, keluar, item, nilai];
+
+      await dbQuery(sql, values);
+
+      res.status(200).json({ message: "Data berhasil dikirim" });
+    }
   } catch (error) {
     console.log(error);
     res.status(500).json({ message: "Gagal input data", data: [] });
@@ -36,7 +61,7 @@ const deleteData = async (req, res) => {
 
 const getThisMonth = async (req, res) => {
   try {
-    const sql = `SELECT * FROM financial WHERE tanggal >= ? AND tanggal <= ?`;
+    const sql = `SELECT * FROM financial WHERE tanggal >= ? AND tanggal <= ? ORDER BY tanggal ASC`;
     const values = date.getDate();
 
     const result = await dbQuery(sql, values);
