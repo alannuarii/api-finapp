@@ -61,7 +61,7 @@ const deleteData = async (req, res) => {
 
 const getThisMonth = async (req, res) => {
   try {
-    const sql = `SELECT * FROM financial WHERE tanggal >= ? AND tanggal <= ? ORDER BY tanggal ASC`;
+    const sql = `SELECT * FROM financial WHERE tanggal >= ? AND tanggal <= ? ORDER BY tanggal, id`;
     const values = date.getDate();
 
     const result = await dbQuery(sql, values);
@@ -78,7 +78,7 @@ const getThisMonth = async (req, res) => {
 
 const getBeforeMonth = async (req, res) => {
   try {
-    const sql = `SELECT * FROM financial WHERE tanggal >= ? AND tanggal <= ?`;
+    const sql = `SELECT * FROM financial WHERE tanggal <= ?`;
     const values = date.getDateBefore();
 
     const result = await dbQuery(sql, values);
