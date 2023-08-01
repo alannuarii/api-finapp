@@ -59,7 +59,7 @@ const getDateBefore = () => {
   const tahun = hariIni.getFullYear();
 
   if (tanggal <= 25) {
-    bulan -= 2;
+    bulan -= 1;
     if (bulan < 0) {
       tahun--;
       bulan += 12;
